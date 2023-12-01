@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { GetUser } from '../auth/decorator';
+import { GetUser, Public } from '../auth/decorator';
 import { User } from '@prisma/client';
 import { JwtGuard } from '../auth/guard';
 
@@ -25,14 +25,10 @@ export class UserController {
     return user;
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Public()
+  @Get(':username')
+  getUser(@Param('username') username: string) {
+    return this.userService.getUser(username);
   }
 
   @Patch('edit-me')

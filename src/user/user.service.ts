@@ -6,12 +6,17 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return `This action returns all user`;
-  }
+  async getUser(username: string) {
+    const user = await this.prisma.user.findUnique({ where: { username } });
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+    if (!user)
+      throw new NotFoundException(
+        `User with '${username}' could not be found!`,
+      );
+
+    delete user.hash;
+
+    return user;
   }
 
   async update(userId: number, updateUserDto: UpdateUserDto) {
