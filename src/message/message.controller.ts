@@ -6,6 +6,7 @@ import {
   UseGuards,
   Body,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator';
@@ -29,6 +30,15 @@ export class MessageController {
   @Get()
   getMessage(@GetUser('id') userId: number) {
     return this.messageService.getMessages(userId);
+  }
+
+  @UseGuards(JwtGuard)
+  @Patch('seen/:messageId')
+  seenMessage(
+    @GetUser('id') receiverId: number,
+    @Param('messageId') messageId: number,
+  ) {
+    return this.messageService.seenMessage(receiverId, messageId);
   }
 
   @Delete()

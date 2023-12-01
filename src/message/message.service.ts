@@ -62,6 +62,18 @@ export class MessageService {
     });
   }
 
+  async seenMessage(receiverId: number, messageId: number) {
+    return this.prisma.message.update({
+      where: {
+        receiverId,
+        id: messageId,
+      },
+      data: {
+        seen: true,
+      },
+    });
+  }
+
   async deleteAllMessages() {
     await this.prisma.message.deleteMany();
   }
