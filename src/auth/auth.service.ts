@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
@@ -31,6 +35,10 @@ export class AuthService {
   }
 
   async signUp(authDto: AuthDto) {
+    if (authDto.password.length < 8)
+      throw new BadRequestException(
+        'Password should contain minimum 8 characters',
+      );
     try {
       const hash = await argon.hash(authDto.password);
       const user = await this.prisma.user.create({
@@ -45,7 +53,7 @@ export class AuthService {
       if (error instanceof PrismaClientKnownRequestError) {
         // unique field duplicate status code (in this case: same email)
         if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials taken!');
+          throw new ForbiddenException('Username already taken!');
         }
       }
       throw error;
