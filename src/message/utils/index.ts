@@ -11,7 +11,7 @@ export const getYoutubeData = async (ytLink: YoutubeLink) => {
     const videoId = url.slice(17, url.indexOf('?'));
     console.log(videoId);
     const ytData = await axios.get(
-      `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=AIzaSyBhoJNpg1lHzqOmNRd14DxsuloqxtgIecA`,
+      `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${process.env.YOUTUBE_API_KEY}`,
     );
     ytLink.thumbnailUrl = ytData.data.items[0].snippet.thumbnails.medium.url;
   } else {
