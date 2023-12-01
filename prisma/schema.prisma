@@ -13,7 +13,7 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
+  username  String   @unique @db.VarChar(50)
   hash      String
   imgUrl    String?
   createdAt DateTime @default(now())
@@ -37,8 +37,8 @@ model Message {
 model YouTubeLink {
   id            Int       @id @default(autoincrement())
   url           String
-  title         String
-  description   String?
+  title         String    @db.VarChar(100)
+  description   String?   @db.VarChar(300)
   thumbnailUrl  String?
   createdAt     DateTime  @default(now())
   public        Boolean   @default(false)
