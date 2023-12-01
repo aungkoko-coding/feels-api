@@ -7,6 +7,9 @@ import {
   Body,
   Delete,
   Patch,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator';
@@ -28,8 +31,12 @@ export class MessageController {
 
   @UseGuards(JwtGuard)
   @Get()
-  getMessage(@GetUser('id') userId: number) {
-    return this.messageService.getMessages(userId);
+  getMessages(
+    @GetUser('id') userId: number,
+    @Query('from', new DefaultValuePipe(0), ParseIntPipe) from: number,
+    @Query('take', new DefaultValuePipe(10), ParseIntPipe) take: number,
+  ) {
+    return this.messageService.getMessages(userId, from, take);
   }
 
   @UseGuards(JwtGuard)

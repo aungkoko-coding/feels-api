@@ -51,15 +51,23 @@ export class MessageService {
     });
   }
 
-  async getMessages(userId: number) {
-    return this.prisma.message.findMany({
+  async getMessages(userId: number, from: number, take: number) {
+    const count = await this.prisma.message.count();
+    const messages = await this.prisma.message.findMany({
       where: {
         receiverId: userId,
       },
+      skip: from,
+      take,
       include: {
         youtubeLinks: true,
       },
     });
+
+    return {
+      total: count,
+      messages,
+    };
   }
 
   async seenMessage(receiverId: number, messageId: number) {
