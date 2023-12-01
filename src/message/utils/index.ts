@@ -9,7 +9,7 @@ export const getYoutubeData = async (ytLink: YoutubeLink) => {
   const url = ytLink.url;
   if (youtubeRegex.test(url)) {
     const videoId = url.slice(17, url.indexOf('?'));
-    console.log(videoId);
+    // console.log(videoId);
     const ytData = await axios.get(
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=${process.env.YOUTUBE_API_KEY}`,
     );
