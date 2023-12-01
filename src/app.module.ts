@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { MessageModule } from './message/message.module';
 import { FeedModule } from './feed/feed.module';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { FeedModule } from './feed/feed.module';
     PrismaModule,
     MessageModule,
     FeedModule,
+    WebsocketModule,
   ],
   controllers: [],
   providers: [],

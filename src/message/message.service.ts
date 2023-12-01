@@ -14,8 +14,6 @@ export class MessageService {
 
   async sendMessage(username: string, messageDto: CreateMessageDto) {
     const { content, youtubeLinks } = messageDto;
-    const youtubeRegex =
-      /^https:\/\/youtu\.be\/[a-zA-Z0-9_-]{11}(?:\?si=[a-zA-Z0-9_-]+)?$/;
 
     const length = youtubeLinks?.length || 0;
     if (length > 3)

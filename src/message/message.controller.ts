@@ -16,17 +16,25 @@ import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 
 @Controller('messages')
 export class MessageController {
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private websocketGateway: WebsocketGateway,
+  ) {}
 
   @Post(':username')
-  sendMessage(
+  async sendMessage(
     @Param('username') username: string,
     @Body() messageDto: CreateMessageDto,
   ) {
-    return this.messageService.sendMessage(username, messageDto);
+    const message = await this.messageService.sendMessage(username, messageDto);
+
+    this.websocketGateway.server.emit(`message-${username}`, message);
+
+    return message;
   }
 
   @UseGuards(JwtGuard)
