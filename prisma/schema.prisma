@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  hash     String
+  imgUrl   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages Message[]
+}
+
+model Message {
+  id           Int         @id @default(autoincrement())
+  content      String
+  createdAt    DateTime    @default(now())
+
+  receiverId   Int         // Foreign key referencing the User who will receive the message
+  user User @relation(fields: [receiverId], references: [id], onDelete: Cascade)
+  
+  youtubeLinks YouTubeLink[] // One-to-Many relationship with YouTube links in the message
+}
+
+model YouTubeLink {
+  id            Int      @id @default(autoincrement())
+  url           String
+  title         String
+  description   String?
+  thumbnailUrl  String?
+  createdAt     DateTime @default(now())
+  public        Boolean @default(false)
+  
+  messageId   Int     // Foreign key referencing the Message that includes this link
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}

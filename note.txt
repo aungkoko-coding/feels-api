@@ -1,0 +1,37 @@
+app.module.ts - is like a App.jsx in React project and is a main module that will import other modules
+main.ts - is like a main.jsx in React project
+
+Command Lines
+=============
+
+nest new project-name - create a new nest.js project
+nest g module module-name - generate a module
+nest g controller controller-name - generate a controller
+nest g service service-name -generate a service
+nest g resource resource-name - generate above all
+
+To launch(create) database or docker container locally (we need configuration file named docker-compose.yml) =>
+docker compose up [name] -d
+docker compose rm [name] -s -f -v -> remove container
+
+docker ps -> to see running containers
+docker logs [container_id] -> to see details of container
+
+npx prisma --help -> to see available commands
+npx prisma init -> to generate config files (then create your own model(table) in `schema.prisma` file)
+npx prisma migrate dev -> to migrate(create) tables in development mode
+npx prisma generate -> to automatically generate typescript types for each model. We can import it from @prisma/client
+npx prisma studio -> to inspect database
+
+Authentication
+==============
+
+For authentication and authorization, we need to install the following packages
+
+- passport
+- passport-jwt
+- @nestjs/passport
+- @nestjs/jwt
+- @types/passport-jwt
+
+2:22
