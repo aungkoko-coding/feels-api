@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
 import {
   WebSocketGateway,
   WebSocketServer,
   SubscribeMessage,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-
-@Injectable()
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class WebsocketGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -23,9 +22,20 @@ export class WebsocketGateway
     // Handle client disconnect
   }
 
-  @SubscribeMessage('message')
-  handleMessage(client: Socket, payload: any) {
+  @SubscribeMessage('newMessage')
+  handleMessage(
+    @MessageBody() message: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('received message');
     // Handle incoming messages and broadcast to the user
-    this.server.emit(`message-${payload.username}`, payload);
+    // this.server.emit(`newMessage`, message);
+
+    // Business logic to save the message to the database
+    // Broadcasting the new message to all connected clients, excluding the sender
+    // client.broadcast.emit('newMessage', { message, mes: 'hello' });
+
+    // Let's add a bit of humor - respond to the sender with an acknowledgement
+    // client.emit('acknowledgement', 'Your message was received loud and clear!');
   }
 }
