@@ -7,10 +7,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import axios from 'axios';
 import { getYoutubeData } from './utils';
+import { UserService } from 'src/user/user.service';
+import { WebsocketGateway } from 'src/websocket/websocket.gateway';
+import { Message } from '@prisma/client';
 
 @Injectable()
 export class MessageService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private websocketGateway: WebsocketGateway,
+  ) {}
 
   async sendMessage(username: string, messageDto: CreateMessageDto) {
     const { content, youtubeLinks } = messageDto;
@@ -47,6 +53,22 @@ export class MessageService {
         },
       },
     });
+  }
+
+  getUnseenMessagesCount(username: string) {
+    return this.prisma.message.count({
+      where: { seen: false, user: { username } },
+    });
+  }
+
+  async emitReceivedMessageEvent(username: string, message: Message) {
+    const user = await this.prisma.user.findUnique({ where: { username } });
+    // this emit doesn't correspond to handleMessage in websocket.gateway.ts file
+    // At client-side, user have to listen on gateway like socket.on('message-aungko', message => console.log(message))
+    this.websocketGateway.server.emit(
+      `message-${username}-${user.hash}`,
+      message,
+    );
   }
 
   async getMessages(userId: number, from: number, take: number) {

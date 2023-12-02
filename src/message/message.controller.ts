@@ -15,15 +15,11 @@ import { GetUser, Public } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 
 @UseGuards(JwtGuard)
 @Controller('messages')
 export class MessageController {
-  constructor(
-    private messageService: MessageService,
-    private websocketGateway: WebsocketGateway,
-  ) {}
+  constructor(private messageService: MessageService) {}
 
   @Public()
   @Post(':username')
@@ -32,11 +28,7 @@ export class MessageController {
     @Body() messageDto: CreateMessageDto,
   ) {
     const message = await this.messageService.sendMessage(username, messageDto);
-
-    // this emit doesn't correspond to handleMessage in websocket.gateway.ts file
-    // At client-side, user have to listen on gateway like socket.on('message-aungko', message => console.log(message))
-    this.websocketGateway.server.emit(`message-${username}`, { message });
-
+    this.messageService.emitReceivedMessageEvent(username, message);
     return message;
   }
 
