@@ -63,10 +63,11 @@ export class MessageService {
 
   async emitReceivedMessageEvent(username: string, message: Message) {
     const user = await this.prisma.user.findUnique({ where: { username } });
+    console.log(user);
     // this emit doesn't correspond to handleMessage in websocket.gateway.ts file
     // At client-side, user have to listen on gateway like socket.on('message-aungko', message => console.log(message))
     this.websocketGateway.server.emit(
-      `message-${username}-${user.hash}`,
+      `message-${username}-${user.id}`,
       message,
     );
   }
