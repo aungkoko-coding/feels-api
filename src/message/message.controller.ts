@@ -11,12 +11,13 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
 } from '@nestjs/common';
-import { GetUser } from 'src/auth/decorator';
+import { GetUser, Public } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 
+@UseGuards(JwtGuard)
 @Controller('messages')
 export class MessageController {
   constructor(
@@ -24,6 +25,7 @@ export class MessageController {
     private websocketGateway: WebsocketGateway,
   ) {}
 
+  @Public()
   @Post(':username')
   async sendMessage(
     @Param('username') username: string,
@@ -38,7 +40,6 @@ export class MessageController {
     return message;
   }
 
-  @UseGuards(JwtGuard)
   @Get()
   getMessages(
     @GetUser('id') userId: number,
@@ -48,7 +49,6 @@ export class MessageController {
     return this.messageService.getMessages(userId, from, take);
   }
 
-  @UseGuards(JwtGuard)
   @Patch('seen/:messageId')
   seenMessage(
     @GetUser('id') receiverId: number,
@@ -57,8 +57,9 @@ export class MessageController {
     return this.messageService.seenMessage(receiverId, messageId);
   }
 
+  @Public()
   @Delete()
-  deleteAllMessages() {
-    return this.messageService.deleteAllMessages();
+  deleteAllMessages(@Query('secret') secret: string) {
+    return this.messageService.deleteAllMessages(secret);
   }
 }

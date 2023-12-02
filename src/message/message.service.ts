@@ -80,7 +80,11 @@ export class MessageService {
     });
   }
 
-  async deleteAllMessages() {
+  async deleteAllMessages(secret: string) {
+    if (secret !== process.env.SYS_ADMIN_SECRET)
+      throw new ForbiddenException(
+        'You are not allowed to delete all messages!',
+      );
     await this.prisma.message.deleteMany();
   }
 }
