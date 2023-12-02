@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -7,6 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
+@Injectable()
 @WebSocketGateway()
 export class WebsocketGateway
   implements OnGatewayConnection, OnGatewayDisconnect
