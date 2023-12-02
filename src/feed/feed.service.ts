@@ -11,6 +11,7 @@ export class FeedService {
       orderBy: {
         createdAt: 'desc',
       },
+      where: { public: true },
       take,
       skip: from,
     });
