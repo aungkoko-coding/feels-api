@@ -6,7 +6,7 @@ import * as crypto from 'crypto';
 @Injectable()
 export class CryptoService {
   private readonly algorithm: string = 'aes-256-ctr';
-  private readonly secretKey: string = 'your-secret-key';
+  private readonly secretKey: string = process.env.CRYPTO_SECRET;
 
   encrypt(text: string = ''): string {
     const cipher = crypto.createCipher(this.algorithm, this.secretKey);
