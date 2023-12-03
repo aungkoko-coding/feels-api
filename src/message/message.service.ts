@@ -12,14 +12,15 @@ import { CryptoService } from 'src/crypto/crypto.service';
 
 @Injectable()
 export class MessageService {
+  youtubeRegex: RegExp;
   constructor(
     private prisma: PrismaService,
     private websocketGateway: WebsocketGateway,
     private cryptoService: CryptoService,
-  ) {}
-
-  youtubeRegex =
-    /^https:\/\/youtu\.be\/[a-zA-Z0-9_-]{11}(?:\?si=[a-zA-Z0-9_-]+)?$/;
+  ) {
+    this.youtubeRegex =
+      /^https:\/\/youtu\.be\/[a-zA-Z0-9_-]{11}(?:\?si=[a-zA-Z0-9_-]+)?$/;
+  }
 
   async sendMessage(username: string, messageDto: CreateMessageDto) {
     const { youtubeLinks } = messageDto;
