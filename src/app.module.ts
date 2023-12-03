@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { MessageModule } from './message/message.module';
 import { FeedModule } from './feed/feed.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
+import { CryptoService } from './crypto/crypto.service';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { WebsocketGateway } from './websocket/websocket.gateway';
     FeedModule,
   ],
   controllers: [],
-  providers: [WebsocketGateway],
+  providers: [WebsocketGateway, CryptoService],
 })
 export class AppModule {}
