@@ -31,7 +31,9 @@ export class AuthService {
     const pwdMatches = await argon.verify(user.hash, authDto.password);
     if (!pwdMatches) throw new ForbiddenException("Password doesn't match!");
 
-    return this.signToken(user.id, user.username);
+    delete user.hash;
+
+    return { user, token: this.signToken(user.id, user.username) };
   }
 
   async signUp(authDto: AuthDto) {
@@ -48,7 +50,9 @@ export class AuthService {
         },
       });
 
-      return this.signToken(user.id, user.username);
+      delete user.hash;
+
+      return { user, token: this.signToken(user.id, user.username) };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         // unique field duplicate status code (in this case: same email)
@@ -71,6 +75,6 @@ export class AuthService {
       secret: this.config.get('JWT_SECRET'),
     });
 
-    return { token };
+    return token;
   }
 }

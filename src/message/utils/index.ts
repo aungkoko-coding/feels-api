@@ -47,7 +47,7 @@ export const getYoutubeData = async (
     );
     ytLink.title = metadata.snippet.title;
     ytLink.thumbnailUrl = metadata.snippet.thumbnails.medium.url;
-    ytLink.description = `${hours ? hours + ':' : ''}${
+    ytLink.duration = `${hours ? hours + ':' : ''}${
       minutes ? minutes + ':' : '00:'
     }${seconds ? seconds : '00'}`;
 

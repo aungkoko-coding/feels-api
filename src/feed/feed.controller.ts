@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   DefaultValuePipe,
   Get,
@@ -6,16 +7,28 @@ import {
   Query,
 } from '@nestjs/common';
 import { FeedService } from './feed.service';
+import { timestamp } from 'rxjs';
+import { time } from 'console';
 
 @Controller('feeds')
 export class FeedController {
   constructor(private feedService: FeedService) {}
 
+  // @Get()
+  // getFeeds(
+  //   @Query('from', new DefaultValuePipe(0), ParseIntPipe) from: number,
+  //   @Query('take', new DefaultValuePipe(10), ParseIntPipe) take: number,
+  // ) {
+  //   return this.feedService.getFeeds(from, take);
+  // }
+
   @Get()
   getFeeds(
-    @Query('from', new DefaultValuePipe(0), ParseIntPipe) from: number,
-    @Query('take', new DefaultValuePipe(10), ParseIntPipe) take: number,
+    @Body('timestamp', new DefaultValuePipe(new Date().toISOString()))
+    timestamp: string,
+    @Body('from', new DefaultValuePipe(0), ParseIntPipe) from: number,
+    @Body('take', new DefaultValuePipe(20), ParseIntPipe) take: number,
   ) {
-    return this.feedService.getFeeds(from, take);
+    return this.feedService.getFeeds(timestamp, from, take);
   }
 }

@@ -5,25 +5,31 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class FeedService {
   constructor(private prisma: PrismaService) {}
 
-  async getFeeds(from: number, take: number) {
-    const count = await this.prisma.youTubeLink.count();
+  async getFeeds(timestamp: string, from: number, take: number) {
+    console.log(timestamp);
     const data = await this.prisma.youTubeLink.findMany({
-      orderBy: {
-        createdAt: 'desc',
+      // orderBy: {
+      //   createdAt: 'desc',
+      // },
+      where: {
+        public: true,
+        createdAt: {
+          lt: new Date(timestamp),
+        },
       },
-      where: { public: true },
       select: {
         id: true,
         title: true,
         thumbnailUrl: true,
         url: true,
         description: true,
+        createdAt: true,
       },
       take,
       skip: from,
     });
 
-    return { total: count, data };
+    return data;
   }
 
   async getFeedById(id: number) {
