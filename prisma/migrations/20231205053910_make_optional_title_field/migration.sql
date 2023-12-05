@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "YouTubeLink" ALTER COLUMN "title" DROP NOT NULL,
+ALTER COLUMN "title" SET DATA TYPE TEXT;

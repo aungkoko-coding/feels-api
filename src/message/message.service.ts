@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -42,7 +43,10 @@ export class MessageService {
       try {
         await Promise.all(promises);
       } catch (error) {
-        if (!(error instanceof ForbiddenException))
+        if (
+          !(error instanceof ForbiddenException) &&
+          !(error instanceof BadRequestException)
+        )
           throw new InternalServerErrorException('Failed to fetch thumbnails!');
 
         throw error;
