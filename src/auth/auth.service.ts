@@ -33,7 +33,10 @@ export class AuthService {
 
     delete user.hash;
 
-    return { user, token: this.signToken(user.id, user.username) };
+    return {
+      user,
+      token: await this.signToken(user.id, user.username),
+    };
   }
 
   async signUp(authDto: AuthDto) {
@@ -52,7 +55,7 @@ export class AuthService {
 
       delete user.hash;
 
-      return { user, token: this.signToken(user.id, user.username) };
+      return { user, token: await this.signToken(user.id, user.username) };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         // unique field duplicate status code (in this case: same email)

@@ -8,9 +8,9 @@ export class FeedService {
   async getFeeds(timestamp: string, from: number, take: number) {
     console.log(timestamp);
     const data = await this.prisma.youTubeLink.findMany({
-      // orderBy: {
-      //   createdAt: 'desc',
-      // },
+      orderBy: {
+        createdAt: 'desc',
+      },
       where: {
         public: true,
         createdAt: {
