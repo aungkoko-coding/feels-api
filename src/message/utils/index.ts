@@ -2,6 +2,7 @@ import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import axios from 'axios';
 import { YoutubeLink } from '../dto/create-message.dto';
 import { CryptoService } from 'src/crypto/crypto.service';
+import { YoutubeLinkType } from '../definitions';
 
 const youtubeRegex =
   /^https:\/\/youtu\.be\/[a-zA-Z0-9_-]{11}(?:\?si=[a-zA-Z0-9_-]+)?$/;
@@ -25,7 +26,7 @@ const convertDuration = (duration: string) => {
 };
 
 export const getYoutubeData = async (
-  ytLink: YoutubeLink,
+  ytLink: YoutubeLinkType,
   cryptoService: CryptoService,
 ) => {
   const url = ytLink.url;
@@ -52,6 +53,7 @@ export const getYoutubeData = async (
     }${seconds ? seconds : '00'}`;
 
     if (!ytLink.public) {
+      ytLink.title = cryptoService.encrypt(ytLink.title);
       ytLink.thumbnailUrl = cryptoService.encrypt(ytLink.thumbnailUrl);
       ytLink.url = cryptoService.encrypt(ytLink.url);
     }

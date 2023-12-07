@@ -33,8 +33,7 @@ export class MessageService {
       );
     if (length > 0) {
       const promises = youtubeLinks.map((yt) => {
-        if (!yt.public) {
-          yt.title = this.cryptoService.encrypt(yt.title);
+        if (!yt.public && yt.description) {
           yt.description = this.cryptoService.encrypt(yt.description);
         }
 

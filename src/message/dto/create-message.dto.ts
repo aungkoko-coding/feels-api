@@ -9,22 +9,11 @@ import { Type } from 'class-transformer';
 
 export class YoutubeLink {
   @IsString()
-  title?: string;
+  url: string;
 
   @IsString()
   @IsOptional()
   description?: string;
-
-  @IsString()
-  @IsOptional()
-  thumbnailUrl?: string;
-
-  @IsString()
-  @IsOptional()
-  duration?: string;
-
-  @IsString()
-  url: string;
 
   @IsBoolean()
   @IsOptional()
