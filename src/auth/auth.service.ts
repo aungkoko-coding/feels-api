@@ -50,6 +50,7 @@ export class AuthService {
         data: {
           username: authDto.username,
           hash,
+          imgUrl: authDto.imgUrl,
         },
       });
 
