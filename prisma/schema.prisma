@@ -36,6 +36,7 @@ model Message {
 
 model YouTubeLink {
   id            Int       @id @default(autoincrement())
+  vid           String?
   url           String
   title         String?   // this field data will be automatically added by youtube api fetch response data
   description   String?   @db.VarChar(300)

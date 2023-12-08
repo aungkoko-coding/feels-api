@@ -46,6 +46,7 @@ export const getYoutubeData = async (
     const { hours, minutes, seconds } = convertDuration(
       metadata.contentDetails.duration,
     );
+    ytLink.vid = videoId;
     ytLink.title = metadata.snippet.title;
     ytLink.thumbnailUrl = metadata.snippet.thumbnails.medium.url;
     ytLink.duration = `${hours ? hours + ':' : ''}${
@@ -53,6 +54,7 @@ export const getYoutubeData = async (
     }${seconds ? seconds : '00'}`;
 
     if (!ytLink.public) {
+      ytLink.vid = cryptoService.encrypt(videoId);
       ytLink.title = cryptoService.encrypt(ytLink.title);
       ytLink.thumbnailUrl = cryptoService.encrypt(ytLink.thumbnailUrl);
       ytLink.url = cryptoService.encrypt(ytLink.url);
