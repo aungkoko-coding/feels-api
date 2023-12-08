@@ -35,10 +35,18 @@ export class MessageController {
   @Get()
   getMessages(
     @GetUser('id') userId: number,
-    @Query('from', new DefaultValuePipe(0), ParseIntPipe) from: number,
-    @Query('take', new DefaultValuePipe(10), ParseIntPipe) take: number,
+    // @Query('from', new DefaultValuePipe(0), ParseIntPipe) from: number,
+    // @Query('take', new DefaultValuePipe(10), ParseIntPipe) take: number,
   ) {
-    return this.messageService.getMessages(userId, from, take);
+    return this.messageService.getMessages(userId);
+  }
+
+  @Get('/:messageId')
+  getMessage(
+    @GetUser('id') userId: number,
+    @Param('messageId', ParseIntPipe) messageId: number,
+  ) {
+    return this.messageService.getMessage(messageId, userId);
   }
 
   @Patch('seen/:messageId')

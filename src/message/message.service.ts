@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMessageDto } from './dto/create-message.dto';
@@ -85,23 +86,47 @@ export class MessageService {
     );
   }
 
-  async getMessages(userId: number, from: number, take: number) {
-    const count = await this.prisma.message.count();
+  //   async getMessages(userId: number, from: number, take: number) {
+
+  async getMessages(userId: number) {
+    // const count = await this.prisma.message.count();
     const messages = await this.prisma.message.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
       where: {
         receiverId: userId,
       },
-      skip: from,
-      take,
+      // skip: from,
+      // take,
       include: {
         youtubeLinks: true,
       },
     });
 
-    return {
-      total: count,
-      messages,
-    };
+    return messages;
+
+    // return {
+    //   total: count,
+    //   messages,
+    // };
+  }
+
+  async getMessage(messageId: number, userId: number) {
+    const message = await this.prisma.message.findUnique({
+      where: {
+        id: messageId,
+        user: {
+          id: userId,
+        },
+      },
+      include: {
+        youtubeLinks: true,
+      },
+    });
+    if (!message) throw new NotFoundException('Message not found!');
+
+    return message;
   }
 
   async seenMessage(receiverId: number, messageId: number) {
