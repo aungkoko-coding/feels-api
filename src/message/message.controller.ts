@@ -52,7 +52,7 @@ export class MessageController {
   @Patch('seen/:messageId')
   seenMessage(
     @GetUser('id') receiverId: number,
-    @Param('messageId') messageId: number,
+    @Param('messageId', ParseIntPipe) messageId: number,
   ) {
     return this.messageService.seenMessage(receiverId, messageId);
   }
