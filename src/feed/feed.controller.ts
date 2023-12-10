@@ -7,10 +7,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { FeedService } from './feed.service';
-import { timestamp } from 'rxjs';
-import { time } from 'console';
 
-@Controller('feeds')
+@Controller('feed')
 export class FeedController {
   constructor(private feedService: FeedService) {}
 
