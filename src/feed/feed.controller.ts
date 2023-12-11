@@ -3,6 +3,7 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Param,
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
@@ -25,8 +26,13 @@ export class FeedController {
     @Body('timestamp', new DefaultValuePipe(new Date().toISOString()))
     timestamp: string,
     @Body('from', new DefaultValuePipe(0), ParseIntPipe) from: number,
-    @Body('take', new DefaultValuePipe(20), ParseIntPipe) take: number,
+    @Body('take', new DefaultValuePipe(30), ParseIntPipe) take: number,
   ) {
     return this.feedService.getFeeds(timestamp, from, take);
+  }
+
+  @Get(':feedId')
+  getFeed(@Param('feedId', ParseIntPipe) feedId: number) {
+    return this.feedService.getFeedById(feedId);
   }
 }

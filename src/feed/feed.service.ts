@@ -6,26 +6,26 @@ export class FeedService {
   constructor(private prisma: PrismaService) {}
 
   async getFeeds(timestamp: string, from: number, take: number) {
-    console.log(timestamp);
     const data = await this.prisma.youTubeLink.findMany({
       orderBy: {
         createdAt: 'desc',
       },
       where: {
         public: true,
-        createdAt: {
-          lt: new Date(timestamp),
-        },
+        // createdAt: {
+        //   lt: new Date(timestamp),
+        // },
       },
       select: {
         id: true,
         title: true,
         thumbnailUrl: true,
         url: true,
+        duration: true,
         description: true,
         createdAt: true,
       },
-      take,
+      take: take,
       skip: from,
     });
 
@@ -39,7 +39,9 @@ export class FeedService {
         id: true,
         title: true,
         thumbnailUrl: true,
+        duration: true,
         url: true,
+        vid: true,
         description: true,
       },
     });
