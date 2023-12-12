@@ -1,24 +1,37 @@
-// src/crypto/crypto.service.ts
-
 import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
 
 @Injectable()
 export class CryptoService {
-  private readonly algorithm: string = 'aes-256-ctr';
-  private readonly secretKey: string = process.env.CRYPTO_SECRET;
+  private readonly algorithm: string = 'aes-256-cbc';
+  private readonly secretKey: Buffer = crypto
+    .createHash('sha256')
+    .update(process.env.CRYPTO_SECRET)
+    .digest();
 
   encrypt(text: string = ''): string {
-    const cipher = crypto.createCipher(this.algorithm, this.secretKey);
-    let encrypted = cipher.update(text, 'utf-8', 'hex');
-    encrypted += cipher.final('hex');
-    return encrypted;
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(
+      this.algorithm,
+      Buffer.from(this.secretKey),
+      iv,
+    );
+    let encrypted = cipher.update(text);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    return iv.toString('hex') + ':' + encrypted.toString('hex');
   }
 
   decrypt(encryptedText: string = ''): string {
-    const decipher = crypto.createDecipher(this.algorithm, this.secretKey);
-    let decrypted = decipher.update(encryptedText, 'hex', 'utf-8');
-    decrypted += decipher.final('utf-8');
-    return decrypted;
+    const textParts = encryptedText.split(':');
+    const iv = Buffer.from(textParts.shift(), 'hex');
+    const encryptedData = Buffer.from(textParts.join(':'), 'hex');
+    let decipher = crypto.createDecipheriv(
+      'aes-256-cbc',
+      Buffer.from(this.secretKey),
+      iv,
+    );
+    let decrypted = decipher.update(encryptedData);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    return decrypted.toString();
   }
 }
