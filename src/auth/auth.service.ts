@@ -26,7 +26,10 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new ForbiddenException('Credentials incorrect!');
+    if (!user)
+      throw new ForbiddenException(
+        `We could not find user with username '${authDto.username}'`,
+      );
 
     const pwdMatches = await argon.verify(user.hash, authDto.password);
     if (!pwdMatches) throw new ForbiddenException("Password doesn't match!");
