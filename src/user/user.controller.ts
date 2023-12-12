@@ -20,6 +20,12 @@ import { JwtGuard } from '../auth/guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
+  @Get()
+  getAllUsers() {
+    return this.userService.getAllUsers();
+  }
+
   @Get('me')
   getMe(@GetUser() user: User) {
     return user;

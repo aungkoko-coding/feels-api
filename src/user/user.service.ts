@@ -6,6 +6,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  getAllUsers() {
+    return this.prisma.user.findMany({
+      select: {
+        username: true,
+        imgUrl: true,
+      },
+    });
+  }
+
   async getUser(username: string) {
     const user = await this.prisma.user.findUnique({ where: { username } });
 
