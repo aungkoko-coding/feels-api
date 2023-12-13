@@ -11,6 +11,7 @@ import { getYoutubeData } from './utils';
 import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 import { Message } from '@prisma/client';
 import { CryptoService } from 'src/crypto/crypto.service';
+import { AblyService } from 'src/ably/ably.service';
 
 @Injectable()
 export class MessageService {
@@ -19,6 +20,7 @@ export class MessageService {
     private prisma: PrismaService,
     private websocketGateway: WebsocketGateway,
     private cryptoService: CryptoService,
+    private ablyService: AblyService,
   ) {
     this.youtubeRegex =
       /^https:\/\/youtu\.be\/[a-zA-Z0-9_-]{11}(?:\?si=[a-zA-Z0-9_-]+)?$/;
@@ -77,11 +79,11 @@ export class MessageService {
   }
 
   async emitReceivedMessageEvent(username: string, message: Message) {
-    const user = await this.prisma.user.findUnique({ where: { username } });
+    // const user = await this.prisma.user.findUnique({ where: { username } });
     // this emit doesn't correspond to handleMessage in websocket.gateway.ts file
     // At client-side, user have to listen on gateway like socket.on('message-aungko', message => console.log(message))
-    this.websocketGateway.server.emit(
-      `message-${username}-${user.id}`,
+    this.ablyService.emitMessage(
+      `message-${username}-${message.receiverId}`,
       message,
     );
   }

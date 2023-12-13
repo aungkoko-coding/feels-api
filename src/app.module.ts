@@ -7,6 +7,8 @@ import { MessageModule } from './message/message.module';
 import { FeedModule } from './feed/feed.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { CryptoService } from './crypto/crypto.service';
+import { AblyController } from './ably/ably.controller';
+import { AblyModule } from './ably/ably.module';
 
 @Module({
   imports: [
@@ -16,8 +18,8 @@ import { CryptoService } from './crypto/crypto.service';
     PrismaModule,
     MessageModule,
     FeedModule,
+    AblyModule,
   ],
-  controllers: [],
   providers: [WebsocketGateway, CryptoService],
 })
 export class AppModule {}
