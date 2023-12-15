@@ -1,3 +1,9 @@
+> Backend API for [Feels](https://github.com/AKK-soft-dev/Feels)
+
+> Please don't find vulnerabilities and attack me as I am new to Nest.js. I am scared 😭
+
+> My DTO sucks 🥵
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
