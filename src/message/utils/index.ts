@@ -50,8 +50,8 @@ export const getYoutubeData = async (
     ytLink.title = metadata.snippet.title;
     ytLink.thumbnailUrl = metadata.snippet.thumbnails.medium.url;
     ytLink.duration = `${hours ? hours + ':' : ''}${
-      minutes ? minutes + ':' : '00:'
-    }${seconds ? seconds : '00'}`;
+      minutes ? (minutes < 10 && hours ? '0' + minutes : minutes) + ':' : '00:'
+    }${seconds ? (seconds < 10 ? '0' + seconds : seconds) : '00'}`;
 
     if (!ytLink.public) {
       ytLink.vid = cryptoService.encrypt(videoId);
